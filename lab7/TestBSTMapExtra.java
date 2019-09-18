@@ -1,3 +1,4 @@
+import java.util.Iterator;
 import java.util.Set;
 import java.util.HashSet;
 import static org.junit.Assert.*;
@@ -51,6 +52,23 @@ public class TestBSTMapExtra {
         assertTrue(q.containsKey("e"));
     }
 
+    @Test
+    public void testIterator() {
+        BSTMap<String,String> q = new BSTMap<String,String>();
+        q.put("c","a");
+        q.put("b","a");
+        q.put("a","a");
+        q.put("d","a");
+        q.put("e","a"); // a b c d e
+        Iterator<String> qIterator = q.iterator();
+        assertTrue(qIterator.hasNext());
+        assertEquals("a", qIterator.next());
+        assertEquals("b", qIterator.next());
+        assertEquals("c", qIterator.next());
+        assertEquals("d", qIterator.next());
+        assertEquals("e", qIterator.next());
+        assertFalse(qIterator.hasNext());
+    }
     /* Remove Test 2
      * test the 3 different cases of remove
      */
@@ -61,7 +79,7 @@ public class TestBSTMapExtra {
         q.put("b","a");
         q.put("a","a");
         q.put("d","a");
-        q.put("e","a");                         // a b c d e
+        q.put("e","a"); // a b c d e
         assertTrue(null != q.remove("e"));      // a b c d
         assertTrue(q.containsKey("a"));
         assertTrue(q.containsKey("b"));
