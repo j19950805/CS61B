@@ -1,3 +1,5 @@
+import edu.princeton.cs.algs4.StdRandom;
+
 /**
  * Created by hug.
  */
@@ -15,7 +17,18 @@ public class ExperimentHelper {
      *  N = 8, OIPL: 13
      */
     public static int optimalIPL(int N) {
-        return 0;
+        int k = 0;
+        int OIPL = 0;
+        while(N > 0) {
+            if (N >= Math.pow(2, k)) {
+                OIPL += Math.pow(2, k) * k;
+            } else {
+                OIPL += N * k;
+            }
+            N -= Math.pow(2, k);
+            k++;
+        }
+        return OIPL;
     }
 
     /** Returns the average depth for nodes in an optimal BST of
@@ -27,6 +40,6 @@ public class ExperimentHelper {
      * @return
      */
     public static double optimalAverageDepth(int N) {
-        return 0;
+        return (double) optimalIPL(N) / N;
     }
 }

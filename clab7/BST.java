@@ -1,3 +1,4 @@
+import javax.swing.plaf.basic.BasicInternalFrameUI;
 import java.util.NoSuchElementException;
 
 /*  @author Josh Hug, with most code created by:
@@ -245,5 +246,20 @@ public class BST<Key extends Comparable<Key>> {
      */
     private boolean isEmpty() {
         return size() == 0;
+    }
+
+    /**
+     * Returns the average depth for nodes in the BST.
+     * @return average depth
+     */
+    public double AverageDepth() {
+        return (double) IPL(root, 0) / size();
+    }
+
+    private int IPL(Node x, int depth) {
+        if (x == null) {
+            return 0;
+        }
+        return depth + IPL(x.left, depth + 1) + IPL(x.right, depth + 1);
     }
 }
