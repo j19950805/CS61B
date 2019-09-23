@@ -86,12 +86,26 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
 
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        keySet.remove(key);
+        n = keySet.size();
+        if ((double) n / m > loadFactor && m > 16) {
+            resize(m / 2);
+        }
+        return buckets[hash(key)].remove(key);
     }
 
     @Override
     public V remove(K key, V value) {
-        throw new UnsupportedOperationException();
+        V val = buckets[hash(key)].remove(key, value);
+        if(val == null) {
+            return null;
+        }
+        keySet.remove(key);
+        n = keySet.size();
+        if ((double) n / m > loadFactor && m > 16) {
+            resize(m / 2);
+        }
+        return val;
     }
 
     @Override
