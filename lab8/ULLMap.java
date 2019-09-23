@@ -145,12 +145,46 @@ public class ULLMap<K, V>  implements Map61B<K, V> {
 
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        if (list == null) {
+            return null;
+        }
+        if (list.key.equals(key)) {
+            V value = list.val;
+            list = list.next;
+            size -= 1;
+            return value;
+        }
+        Entry lookup = list;
+        while (lookup.next != null) {
+            if (lookup.next.key.equals(key)) {
+                V value = lookup.next.val;
+                lookup.next = lookup.next.next;
+                size -= 1;
+                return value;
+            }
+        }
+        return null;
     }
 
     @Override
     public V remove(K key, V value) {
-        throw new UnsupportedOperationException();
+        if (list == null) {
+            return null;
+        }
+        if (list.key.equals(key) && value == list.val) {
+            list = list.next;
+            size -= 1;
+            return value;
+        }
+        Entry lookup = list;
+        while (lookup.next != null) {
+            if (lookup.next.key.equals(key) && value == lookup.next.val) {
+                lookup.next = lookup.next.next;
+                size -= 1;
+                return value;
+            }
+        }
+        return null;
     }
 
     @Override
