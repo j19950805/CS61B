@@ -28,6 +28,7 @@ public class MyTrieSet implements TrieSet61B {
         if (d == key.length()) {
             return x.isKey;
         }
+        if (x.next == null) {return false;}
         Character c = key.charAt(d);
         return (contains(key, x.next.get(c) ,d + 1));
     }
@@ -82,24 +83,18 @@ public class MyTrieSet implements TrieSet61B {
 
     @Override
     public String longestPrefixOf(String key) {
-        StringBuilder path = new StringBuilder();
-        StringBuilder res = new StringBuilder();
-        longestPrefixOf(key, root, res, path, 0);
-        if (res.length() == 0) {
-            return null;
-        }
-        return res.toString();
+        int length = longestPrefixOf(key, root, 0, -1);
+        if (length == -1) return null;
+        return key.substring(0, length);
     }
 
-    private void longestPrefixOf(String key, TrieNode x, StringBuilder res, StringBuilder path, int d) {
-        if (x == null || d >= key.length()) {return;}
+    private int longestPrefixOf(String key, TrieNode x, int d,int length) {
+        if (x == null || d > key.length()) {return length;}
         if (x.isKey) {
-             res.append(path);
-             path.setLength(0);
+             length = d;
         }
+        if (x.next == null) {return length;}
         Character c = key.charAt(d);
-        path.append(c);
-        if (x.next == null) {return;}
-        longestPrefixOf(key, x.next.get(c), res, path, d + 1);
+        return longestPrefixOf(key, x.next.get(c), d + 1, length);
     }
 }
