@@ -42,42 +42,42 @@ public class ArrayHeapMinPQTest {
         System.out.println("Total time elapsed(NaiveMinPQ.add): " + (end - start)/1000.0 +  " seconds.");
 
         start = System.currentTimeMillis();
-        for (int i = 0; i < 1000000; i += 1) {
+        for (int i = 0; i < 10000; i += 1) {
             ahmPQ.getSmallest();
         }
         end = System.currentTimeMillis();
         System.out.println("Total time elapsed(ArrayHeapMinPQ.getSmallest): " + (end - start)/1000.0 +  " seconds.");
 
         start = System.currentTimeMillis();
-        for (int i = 0; i < 1000000; i += 1) {
+        for (int i = 0; i < 10000; i += 1) {
             nmPQ.getSmallest();
         }
         end = System.currentTimeMillis();
         System.out.println("Total time elapsed(NaiveMinPQ.getSmallest): " + (end - start)/1000.0 +  " seconds.");
 
         start = System.currentTimeMillis();
-        for (int i = 0; i < 1000000; i += 1) {
+        for (int i = 0; i < 10000; i += 1) {
             ahmPQ.contains(i);
         }
         end = System.currentTimeMillis();
         System.out.println("Total time elapsed(ArrayHeapMinPQ.contains): " + (end - start)/1000.0 +  " seconds.");
 
         start = System.currentTimeMillis();
-        for (int i = 0; i < 1000000; i += 1) {
+        for (int i = 0; i < 10000; i += 1) {
             nmPQ.contains(i);
         }
         end = System.currentTimeMillis();
         System.out.println("Total time elapsed(NaiveMinPQ.contains): " + (end - start)/1000.0 +  " seconds.");
 
         start = System.currentTimeMillis();
-        for (int i = 0; i < 1000000; i += 1) {
+        for (int i = 0; i < 10000; i += 1) {
             ahmPQ.changePriority(i, StdRandom.uniform());
         }
         end = System.currentTimeMillis();
         System.out.println("Total time elapsed(ArrayHeapMinPQ.changePriority): " + (end - start)/1000.0 +  " seconds.");
 
         start = System.currentTimeMillis();
-        for (int i = 0; i < 1000000; i += 1) {
+        for (int i = 0; i < 10000; i += 1) {
             nmPQ.changePriority(i, StdRandom.uniform());
         }
         end = System.currentTimeMillis();
@@ -85,14 +85,14 @@ public class ArrayHeapMinPQTest {
 
         int size;
         start = System.currentTimeMillis();
-        for (int i = 0; i < 1000000; i += 1) {
+        for (int i = 0; i < 10000; i += 1) {
             ahmPQ.removeSmallest();
         }
         end = System.currentTimeMillis();
         System.out.println("Total time elapsed(ArrayHeapMinPQ.removeSmallest): " + (end - start)/1000.0 +  " seconds.");
 
         start = System.currentTimeMillis();
-        for (int i = 0; i < 1000000; i += 1) {
+        for (int i = 0; i < 10000; i += 1) {
             nmPQ.removeSmallest();
         }
         end = System.currentTimeMillis();
