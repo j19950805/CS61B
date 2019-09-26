@@ -41,21 +41,12 @@ public class KDTree {
         Point goal = new Point(x, y);
         Point res = root.point;
         double minDist = Point.distance(goal, res);
-        return nearest(goal, res, minDist, root, xComparator).p;
+        return nearest(goal, res, minDist, root, xComparator);
     }
 
-    private class pdPair{
-        private double d;
-        private Point p;
-        private pdPair(Point p, double d) {
-            this.p = p;
-            this.d = d;
-        }
-    }
-
-    private pdPair nearest(Point goal, Point res, double minDist, Node x, Comparator<Point> c) {
+    private Point nearest(Point goal, Point res, double minDist, Node x, Comparator<Point> c) {
         if (x == null) {
-            return new pdPair(res, minDist);
+            return res;
         }
 
         double distance = Point.distance(goal, x.point);
@@ -64,27 +55,20 @@ public class KDTree {
             res = x.point;
         }
 
-        pdPair result;
         if (c.compare(goal, x.point) < 0) {
-            result = nearest(goal, res, minDist, x.left, changeComparator(c));
-            res = result.p;
-            minDist = result.d;
+            res = nearest(goal, res, minDist, x.left, changeComparator(c));
+            minDist = Point.distance(goal, res);
             if (directionMinDist(goal, x.point, c) < minDist) {
-                result = nearest(goal, res, minDist, x.right, changeComparator(c));
-                res = result.p;
-                minDist = result.d;
+                res = nearest(goal, res, minDist, x.right, changeComparator(c));
             }
         } else {
-            result = nearest(goal, res, minDist, x.right, changeComparator(c));
-            res = result.p;
-            minDist = result.d;
+            res = nearest(goal, res, minDist, x.right, changeComparator(c));
+            minDist = Point.distance(goal, res);
             if (directionMinDist(goal, x.point, c) < minDist) {
-                result = nearest(goal, res, minDist, x.left, changeComparator(c));
-                res = result.p;
-                minDist = result.d;
+                res = nearest(goal, res, minDist, x.right, changeComparator(c));
             }
         }
-        return result;
+        return res;
     }
 
     Comparator<Point> xComparator = (p1, p2) -> {
