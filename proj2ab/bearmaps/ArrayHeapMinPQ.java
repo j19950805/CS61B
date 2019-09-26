@@ -55,6 +55,9 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
     @Override
     public void changePriority(T item, double priority) {
+        if (!contains(item)) {
+            throw new NoSuchElementException("PQ does not contain " + item);
+        }
         int originalIndex = keyIndex.get(item);
         PriorityNode p = minPQ.get(originalIndex);
         p.setPriority(priority);
