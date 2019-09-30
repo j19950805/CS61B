@@ -1,9 +1,13 @@
+import java.util.*;
+
 /**
  * A String-like class that allows users to add and remove characters in the String
  * in constant time and have a constant-time hash function. Used for the Rabin-Karp
  * string-matching algorithm.
  */
 class RollingString{
+    private LinkedList<Character> string;
+    private int hashcode;
 
     /**
      * Number of total possible int values a character can take on.
@@ -23,7 +27,19 @@ class RollingString{
      */
     public RollingString(String s, int length) {
         assert(s.length() == length);
-        /* FIX ME */
+        string = new LinkedList<>();
+        for(char c: s.toCharArray()) {
+            string.add(c);
+        }
+        hashcode = hash(string);
+    }
+
+    private int hash(LinkedList<Character> string) {
+        int hash = 0;
+        for (char c: string) {
+            hash = ((hash * UNIQUECHARS + (int) c) & 0x7FFFFFFF) % PRIMEBASE;
+        }
+        return hash;
     }
 
     /**
@@ -32,7 +48,11 @@ class RollingString{
      * Should be a constant-time operation.
      */
     public void addChar(char c) {
-        /* FIX ME */
+        string.add(c);
+        char removed = string.remove();
+        hashcode += PRIMEBASE;
+        hashcode -= (((int) Math.pow(UNIQUECHARS, length() - 1) * removed) & 0x7FFFFFFF) % PRIMEBASE;
+        hashcode = ((hashcode * UNIQUECHARS + (int) c) & 0x7FFFFFFF) % PRIMEBASE;
     }
 
 
@@ -43,8 +63,8 @@ class RollingString{
      */
     public String toString() {
         StringBuilder strb = new StringBuilder();
-        /* FIX ME */
-        return "";
+        strb.append(string);
+        return strb.toString();
     }
 
     /**
@@ -52,8 +72,7 @@ class RollingString{
      * Should be a constant-time operation.
      */
     public int length() {
-        /* FIX ME */
-        return -1;
+        return string.size();
     }
 
 
@@ -64,8 +83,10 @@ class RollingString{
      */
     @Override
     public boolean equals(Object o) {
-        /* FIX ME */
-        return false;
+        if (o == null || o.getClass() != this.getClass()) {
+            return false;
+        }
+        return string.equals(((RollingString) o).string);
     }
 
     /**
@@ -74,7 +95,6 @@ class RollingString{
      */
     @Override
     public int hashCode() {
-        /* FIX ME */
-        return -1;
+        return hashcode;
     }
 }
