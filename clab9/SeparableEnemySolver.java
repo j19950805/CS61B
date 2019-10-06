@@ -24,29 +24,21 @@ public class SeparableEnemySolver {
      */
     public boolean isSeparable() {
         HashMap<String, Boolean> groupMark = new HashMap<>();
-        HashMap<String, String> checkedEdge = new HashMap<>();
         for (String label: g.labels()) {
             if (!groupMark.containsKey(label)) {
                 groupMark.put(label, true);
             }
             for (String neighbor: g.neighbors(label)) {
-                if (checkedEdge.get(label) == neighbor) {
-                  continue;
-                } else {
-                    checkedEdge.put(neighbor, label);
-                }
-                if (groupMark.containsKey(neighbor)) {
-                    if (groupMark.get(label) == groupMark.get(neighbor)) {
-                        return false;
-                    }
-                }
-                else {
+                if (!groupMark.containsKey(neighbor)) {
                     groupMark.put(neighbor, !groupMark.get(label));
+                } else if (groupMark.get(label) == groupMark.get(neighbor)) {
+                    return false;
                 }
             }
         }
         return true;
     }
+
 
 
     /* HELPERS FOR READING IN CSV FILES. */
