@@ -9,7 +9,20 @@ public class TestSortAlgs {
 
     @Test
     public void testQuickSort() {
-
+        Queue<String> q1 = new Queue<>();
+        q1.enqueue("Papaya");
+        q1.enqueue("Banana");
+        q1.enqueue("Apple");
+        q1.enqueue("Tangerine");
+        q1.enqueue("Grape");
+        q1.enqueue("Mango");
+        q1.enqueue("Guava");
+        q1.enqueue("Apple");
+        q1.enqueue("Kiwifruit");
+        q1.enqueue("Mango");
+        q1.enqueue("Peach");
+        Queue<String> q2 = QuickSort.quickSort(q1);
+        assertTrue(isSorted(q2));
     }
 
     @Test
