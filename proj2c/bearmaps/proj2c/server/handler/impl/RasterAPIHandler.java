@@ -17,13 +17,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static bearmaps.proj2c.utils.Constants.SEMANTIC_STREET_GRAPH;
-import static bearmaps.proj2c.utils.Constants.ROUTE_LIST;
+import static bearmaps.proj2c.utils.Constants.*;
 
 /**
  * Handles requests from the web browser for map images. These images
  * will be rastered into one large image to be displayed to the user.
- * @author rahul, Josh Hug, _________
+ * @author rahul, Josh Hug, Jennifer Chen
  */
 public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<String, Object>> {
 
@@ -84,13 +83,68 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      */
     @Override
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
-        //System.out.println("yo, wanna know the parameters given by the web browser? They are:");
-        //System.out.println(requestParams);
-        Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
-                + "your browser.");
-        return results;
+        double ul_lon = requestParams.get("ullon");
+        double ul_lat = requestParams.get("ullat");
+        double lr_lon = requestParams.get("lrlon");
+        double lr_lat = requestParams.get("lrlat");
+        if (!validRequest(ul_lon, ul_lat, lr_lon, lr_lat)) {
+            return queryFail();
+        } else {
+            Map<String, Object> results = new HashMap<>();
+            double width = requestParams.get("w");
+            int depth = getDepth(lr_lon, ul_lon, width);
+            getRasterData(ul_lon, ul_lat, lr_lon, lr_lat, depth, results);
+            return results;
+        }
     }
+
+    private boolean validRequest(double ul_lon, double ul_lat,
+                                 double lr_lon, double lr_lat) {
+        return (ul_lon <= lr_lon) && (ul_lat >= lr_lat) &&
+                (ul_lon < ROOT_LRLON) && (ul_lat > ROOT_LRLAT) &&
+                (lr_lon > ROOT_ULLON) && (lr_lat < ROOT_ULLAT);
+    }
+
+    private int getDepth(double lr_lon, double ul_lon, double width) {
+        double requestLonDPP = (lr_lon - ul_lon) / width;
+        int depth = 0;
+        double rasterLonDPP = (ROOT_LRLON - ROOT_ULLON) / TILE_SIZE;
+        while (rasterLonDPP > requestLonDPP && depth < 7) {
+            depth += 1;
+            rasterLonDPP /= 2;
+        }
+        return depth;
+    }
+
+    private void getRasterData(double ul_lon, double ul_lat, double lr_lon, double lr_lat,
+                                     int depth, Map<String, Object> results) {
+        double latPerTile = (ROOT_ULLAT - ROOT_LRLAT)  / Math.pow(2, depth);
+        double lonPerTile = (ROOT_LRLON - ROOT_ULLON) / Math.pow(2, depth);
+        int ul_x = ul_lon < ROOT_ULLON ? 0
+                : (int) Math.ceil((ul_lon - ROOT_ULLON) / lonPerTile) - 1;
+        int ul_y = ul_lat > ROOT_ULLAT ? 0
+                : (int) Math.ceil((ROOT_ULLAT - ul_lat) / latPerTile) - 1;
+        int lr_x = lr_lon > ROOT_LRLON ? (int) Math.pow(2, depth) - 1
+                : (int) Math.ceil((lr_lon - ROOT_ULLON) / lonPerTile) - 1;
+        int lr_y = lr_lat < ROOT_LRLAT ? (int) Math.pow(2, depth) - 1
+                : (int) Math.ceil((ROOT_ULLAT - lr_lat) / latPerTile) - 1;
+
+        String[][] renderGrid = new String[lr_y - ul_y + 1][lr_x - ul_x + 1];
+        for (int x = ul_x; x <= lr_x; x++) {
+            for (int y = ul_y; y <= lr_y; y++) {
+                renderGrid[y - ul_y][x - ul_x] = "d" + depth + "_x" + x + "_y" + y + ".png";
+            }
+        }
+
+        results.put("render_grid", renderGrid);
+        results.put("raster_ul_lon", ROOT_ULLON + lonPerTile * ul_x);
+        results.put("raster_ul_lat", ROOT_ULLAT - latPerTile * ul_y);
+        results.put("raster_lr_lon", ROOT_ULLON + lonPerTile * (lr_x + 1));
+        results.put("raster_lr_lat", ROOT_ULLAT - latPerTile * (lr_y + 1));
+        results.put("depth", depth);
+        results.put("query_success", true);
+    }
+
 
     @Override
     protected Object buildJsonResponse(Map<String, Object> result) {
